@@ -350,7 +350,7 @@ namespace DRODRoguelike.Entities
         public int Uses { get; set; }
         public int Price { get; set; }
         public bool Usable { get; set; }
-        public Image Image { get; set; }
+        public Texture Image { get; set; }
 
         public virtual void Use()
         {

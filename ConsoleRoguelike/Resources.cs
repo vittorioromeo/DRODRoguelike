@@ -15,28 +15,28 @@ namespace DRODRoguelike
         public static bool Sounds { get; set; }
         public static bool Music { get; set; }
 
-        public static Image TitleBar { get; set; }
+		public static Texture TitleBar { get; set; }
 
-        public static List<Image> Styles { get; set; }
+		public static List<Texture> Styles { get; set; }
         public static List<Tileset> Tilesets { get; set; }
-        public static Image GeneralTilesImage { get; set; }
+		public static Texture GeneralTilesImage { get; set; }
         public static Tileset GeneralTiles { get; set; }
 
-        public static Image ParticleBlood { get; set; }
-        public static Image ParticleDebris { get; set; }
-        public static Image ParticleGel { get; set; }
-        public static Image ParticleBomb { get; set; }
+		public static Texture ParticleBlood { get; set; }
+		public static Texture ParticleDebris { get; set; }
+		public static Texture ParticleGel { get; set; }
+		public static Texture ParticleBomb { get; set; }
 
-        public static Image HUDBackground { get; set; }
+		public static Texture HUDBackground { get; set; }
 
-        public static Image IconNull { get; set; }
-        public static Image IconPickAxe { get; set; }
-        public static Image IconHandBomb { get; set; }
-        public static Image IconTrapdoor { get; set; }
-        public static Image IconShield { get; set; }
-        public static Image IconPrism { get; set; }
-        public static Image IconThrowingKnife { get; set; }
-        public static Image IconMimicPotion { get; set; }
+		public static Texture IconNull { get; set; }
+		public static Texture IconPickAxe { get; set; }
+		public static Texture IconHandBomb { get; set; }
+		public static Texture IconTrapdoor { get; set; }
+		public static Texture IconShield { get; set; }
+		public static Texture IconPrism { get; set; }
+		public static Texture IconThrowingKnife { get; set; }
+        public static Texture IconMimicPotion { get; set; }
 
         public static SoundBuffer SoundBufferBrokenWall { get; set; }
         public static SoundBuffer SoundBufferDeath { get; set; }
@@ -91,19 +91,24 @@ namespace DRODRoguelike
             InitializeMusic ();
         }
 
+		private static Texture mktexture(String x)
+		{
+			return new Texture (new Image (x));
+		}
+
         private static void InitializeStyles()
         {
-            Styles = new List<Image> ();
+            Styles = new List<Texture> ();
             Tilesets = new List<Tileset> ();
 
             DirectoryInfo d = new DirectoryInfo(Environment.CurrentDirectory + @"/Data/Images/Styles/");
 
             foreach (FileInfo f in d.GetFiles ().Where(f => f.Extension.EndsWith("png")))
             {
-                Styles.Add(new Image(f.FullName));
+                Styles.Add(mktexture(f.FullName));
             }
 
-            foreach (Image t in Styles)
+            foreach (var t in Styles)
             {
                 Tilesets.Add(new Tileset(t, 14));
             }
@@ -111,24 +116,24 @@ namespace DRODRoguelike
 
         private static void InitializeImages()
         {
-            TitleBar = new Image(Environment.CurrentDirectory + @"/Data/Images/TitleBar.png");
+            TitleBar = mktexture(Environment.CurrentDirectory + @"/Data/Images/TitleBar.png");
 
-            GeneralTilesImage = new Image(Environment.CurrentDirectory + @"/Data/Images/GeneralTiles.png");
-            ParticleBlood = new Image(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleBlood.png");
-            ParticleDebris = new Image(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleDebris.png");
-            ParticleGel = new Image(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleGel.png");
-            ParticleBomb = new Image(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleBomb.png");
+            GeneralTilesImage = mktexture(Environment.CurrentDirectory + @"/Data/Images/GeneralTiles.png");
+            ParticleBlood = mktexture(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleBlood.png");
+            ParticleDebris = mktexture(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleDebris.png");
+            ParticleGel = mktexture(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleGel.png");
+            ParticleBomb = mktexture(Environment.CurrentDirectory + @"/Data/Images/Particles/ParticleBomb.png");
 
-            IconNull = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconNull.png");
-            IconHandBomb = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconHandBomb.png");
-            IconPickAxe = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconPickAxe.png");
-            IconTrapdoor = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconTrapdoor.png");
-            IconShield = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconShield.png");
-            IconPrism = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconPrism.png");
-            IconThrowingKnife = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconThrowingKnife.png");
-            IconMimicPotion = new Image(Environment.CurrentDirectory + @"/Data/Images/Icons/IconMimicPotion.png");
+            IconNull = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconNull.png");
+            IconHandBomb = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconHandBomb.png");
+            IconPickAxe = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconPickAxe.png");
+            IconTrapdoor = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconTrapdoor.png");
+            IconShield = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconShield.png");
+            IconPrism = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconPrism.png");
+            IconThrowingKnife = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconThrowingKnife.png");
+            IconMimicPotion = mktexture(Environment.CurrentDirectory + @"/Data/Images/Icons/IconMimicPotion.png");
 
-            HUDBackground = new Image(Environment.CurrentDirectory + @"/Data/Images/HUDBackground.png");
+            HUDBackground = mktexture(Environment.CurrentDirectory + @"/Data/Images/HUDBackground.png");
 
             GeneralTiles = new Tileset(GeneralTilesImage, 14);
         }

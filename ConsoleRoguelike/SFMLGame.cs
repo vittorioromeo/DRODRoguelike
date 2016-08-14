@@ -6,7 +6,7 @@ using DRODRoguelike.Lib;
 using DRODRoguelike.Terrains;
 using SFML.Graphics;
 using SFML.Window;
-
+using SFML.System;
 #endregion
 
 namespace DRODRoguelike
@@ -20,7 +20,7 @@ namespace DRODRoguelike
             Z = z;
             RenderX = rx;
             RenderY = ry;
-            Sprite = new Sprite { Position = new Vector2(RenderX, RenderY) };
+            Sprite = new Sprite { Position = new Vector2f(RenderX, RenderY) };
         }
 
         public int X { get; set; }
@@ -37,11 +37,11 @@ namespace DRODRoguelike
         {
             RenderX = rx;
             RenderY = ry;
-            Sprite = new Sprite { Position = new Vector2(RenderX, RenderY) };
+            Sprite = new Sprite { Position = new Vector2f(RenderX, RenderY) };
             Life = 36 + Helper.Random.Next(0, 30);
             Angle = Helper.Random.Next(0, 360);
             Speed = Helper.Random.Next(10, 150) / 100f;
-            Sprite.Scale = new Vector2(Helper.Random.Next(23, 63) / 100f, Helper.Random.Next(23, 63) / 100f);
+            Sprite.Scale = new Vector2f(Helper.Random.Next(23, 63) / 100f, Helper.Random.Next(23, 63) / 100f);
             Sprite.Color = new Color(255, 255, 255, Convert.ToByte(Helper.Random.Next(90, 225)));
         }
 
@@ -55,23 +55,23 @@ namespace DRODRoguelike
 
     public class SFMLGame
     {
-        private KeyCode _kcEast = KeyCode.D;
-        private KeyCode _kcExit = KeyCode.Escape;
-        private KeyCode _kcItem1 = KeyCode.B;
-        private KeyCode _kcItem2 = KeyCode.N;
-        private KeyCode _kcItem3 = KeyCode.M;
-        private KeyCode _kcNorth = KeyCode.W;
-        private KeyCode _kcNortheast = KeyCode.E;
-        private KeyCode _kcNorthwest = KeyCode.Q;
-        private KeyCode _kcRestart = KeyCode.R;
-        private KeyCode _kcSkip = KeyCode.T;
-        private KeyCode _kcSouth = KeyCode.S;
-        private KeyCode _kcSoutheast = KeyCode.C;
-        private KeyCode _kcSouthwest = KeyCode.Z;
-        private KeyCode _kcSwingCcw = KeyCode.Left;
-        private KeyCode _kcSwingCw = KeyCode.Right;
-        private KeyCode _kcWait = KeyCode.LShift;
-        private KeyCode _kcWest = KeyCode.A;
+        private Keyboard.Key _kcEast = Keyboard.Key.D;
+        private Keyboard.Key _kcExit = Keyboard.Key.Escape;
+        private Keyboard.Key _kcItem1 = Keyboard.Key.B;
+        private Keyboard.Key _kcItem2 = Keyboard.Key.N;
+        private Keyboard.Key _kcItem3 = Keyboard.Key.M;
+        private Keyboard.Key _kcNorth = Keyboard.Key.W;
+        private Keyboard.Key _kcNortheast = Keyboard.Key.E;
+        private Keyboard.Key _kcNorthwest = Keyboard.Key.Q;
+        private Keyboard.Key _kcRestart = Keyboard.Key.R;
+        private Keyboard.Key _kcSkip = Keyboard.Key.T;
+        private Keyboard.Key _kcSouth = Keyboard.Key.S;
+        private Keyboard.Key _kcSoutheast = Keyboard.Key.C;
+        private Keyboard.Key _kcSouthwest = Keyboard.Key.Z;
+        private Keyboard.Key _kcSwingCcw = Keyboard.Key.Left;
+        private Keyboard.Key _kcSwingCw = Keyboard.Key.Right;
+        private Keyboard.Key _kcWait = Keyboard.Key.LShift;
+        private Keyboard.Key _kcWest = Keyboard.Key.A;
         private decimal count;
 
         public SFMLGame()
@@ -80,8 +80,8 @@ namespace DRODRoguelike
                                ? new RenderWindow(new VideoMode(1022, 900), "DROD Roguelike", Styles.Default)
                                : new RenderWindow(new VideoMode(1022, 900), "DROD Roguelike", Styles.Fullscreen);
 
-            RenderWindow.UseVerticalSync(true);
-            RenderWindow.SetSize(Convert.ToUInt32(Helper.INIParser.GetSetting("Rendering", "Width")),
+			RenderWindow.SetVerticalSyncEnabled(true);
+			RenderWindow.Size = new Vector2u(Convert.ToUInt32(Helper.INIParser.GetSetting("Rendering", "Width")),
                 Convert.ToUInt32(Helper.INIParser.GetSetting("Rendering", "Height")));
             RenderWindow.Display();
 
@@ -102,7 +102,8 @@ namespace DRODRoguelike
 
         public int InputDelay { get; set; }
         public int InputDelayMax { get; set; }
-        public KeyCode LastKeyPress { get; set; }
+		public bool BlockNextInput {get;set;}
+        public Keyboard.Key LastKeyPress { get; set; }
 
         public Tileset CurrentTileset { get; set; }
 
@@ -135,23 +136,23 @@ namespace DRODRoguelike
             SimpleTrapdoor = Helper.INIParser.GetSetting("Rendering", "SimpleTrapdoor") != "0";
             SimpleBrokenWall = Helper.INIParser.GetSetting("Rendering", "SimpleBrokenWall") != "0";
 
-            _kcExit = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcExit"));
-            _kcNorth = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcNorth"));
-            _kcSouth = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSouth"));
-            _kcWest = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcWest"));
-            _kcEast = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcEast"));
-            _kcNorthwest = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcNorthwest"));
-            _kcSouthwest = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSouthwest"));
-            _kcNortheast = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcNortheast"));
-            _kcSoutheast = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSoutheast"));
-            _kcItem1 = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcItem1"));
-            _kcItem2 = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcItem2"));
-            _kcItem3 = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcItem3"));
-            _kcRestart = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcRestart"));
-            _kcSkip = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSkip"));
-            _kcSwingCw = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSwingCw"));
-            _kcSwingCcw = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcSwingCcw"));
-            _kcWait = Helper.StringToKeyCode(Helper.INIParser.GetSetting("Input", "kcWait"));
+            _kcExit = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcExit"));
+            _kcNorth = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcNorth"));
+            _kcSouth = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSouth"));
+            _kcWest = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcWest"));
+            _kcEast = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcEast"));
+            _kcNorthwest = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcNorthwest"));
+            _kcSouthwest = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSouthwest"));
+            _kcNortheast = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcNortheast"));
+            _kcSoutheast = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSoutheast"));
+            _kcItem1 = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcItem1"));
+            _kcItem2 = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcItem2"));
+            _kcItem3 = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcItem3"));
+            _kcRestart = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcRestart"));
+            _kcSkip = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSkip"));
+            _kcSwingCw = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSwingCw"));
+            _kcSwingCcw = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcSwingCcw"));
+            _kcWait = Helper.StringToKey(Helper.INIParser.GetSetting("Input", "kcWait"));
 
             InputDelayMax = int.Parse(Helper.INIParser.GetSetting("Game", "InputDelay"));
             TilesX = int.Parse(Helper.INIParser.GetSetting("Game", "TilesX"));
@@ -163,47 +164,49 @@ namespace DRODRoguelike
             CurrentTileset = Resources.GetRandomTileset();
             TileSize = 14;
             InputDelay = 0;
-            LastKeyPress = KeyCode.Escape;
+            LastKeyPress = Keyboard.Key.Escape;
             TextInventory = new List<Text>();
             SpriteInventory = new List<Sprite>();
             Game = new Game(this, TilesX, TilesY) { SFMLGame = this };
             Running = true;
         }
 
+		private Texture idtexture(Texture x){return x; }
+
         private void InitializeHUD()
         {
             TextInfoLevel = new Text("", Resources.TomsNewRoman)
                            {
-                               Position = new Vector2(43, 765),
-                               Size = 19,
+				Position = new Vector2f(43,  (TilesY * TileSize) + 10),
+                               CharacterSize = 19,
                                Color = Color.Black
                            };
 
             TextInfoTurn = new Text("", Resources.TomsNewRoman)
             {
-                Position = new Vector2(143 + 10, 765),
-                Size = 19,
+				Position = new Vector2f(143 + 10,  (TilesY * TileSize) + 10),
+				CharacterSize = 19,
                 Color = Color.Black
             };
 
             TextInfoEnemies = new Text("", Resources.TomsNewRoman)
             {
-                Position = new Vector2(243 + 20, 765),
-                Size = 19,
+				Position = new Vector2f(243 + 20,  (TilesY * TileSize) + 10),
+				CharacterSize = 19,
                 Color = Color.Black
             };
 
             TextInfoGreckles = new Text("", Resources.TomsNewRoman)
             {
-                Position = new Vector2(373 + 25, 765),
-                Size = 19,
+				Position = new Vector2f(373 + 25,  (TilesY * TileSize) + 10),
+				CharacterSize = 19,
                 Color = Color.Black
             };
 
             TextInfoScore = new Text("", Resources.TomsNewRoman)
             {
-                Position = new Vector2(513 + 25, 765),
-                Size = 19,
+				Position = new Vector2f(513 + 25,  (TilesY * TileSize) + 10),
+				CharacterSize = 19,
                 Color = Color.Black
             };
 
@@ -211,53 +214,53 @@ namespace DRODRoguelike
             for (int i = 0; i < 8; i++)
             {
                 TextLog.Rows.Add(new Text("", Resources.Epilog));
-                TextLog.Rows[i].Position = new Vector2(8, 795 + (TileSize * i));
-                TextLog.Rows[i].Size = 15;
+				TextLog.Rows[i].Position = new Vector2f(8, (TilesY * TileSize) + 40 +  (TileSize * i));
+				TextLog.Rows[i].CharacterSize = 15;
             }
 
             Text temp0 = new Text("", Resources.TomsNewRoman)
                              {
-                                 Position = new Vector2(726, (TilesY * TileSize) + 18),
-                                 Size = 13
+                                 Position = new Vector2f(726, (TilesY * TileSize) + 18),
+				CharacterSize = 13
                              };
             TextInventory.Add(temp0);
 
             Text temp1 = new Text("", Resources.TomsNewRoman)
                              {
-                                 Position = new Vector2(824, (TilesY * TileSize) + 18),
-                                 Size = 13
+                                 Position = new Vector2f(824, (TilesY * TileSize) + 18),
+				CharacterSize = 13
                              };
             TextInventory.Add(temp1);
 
             Text temp2 = new Text("", Resources.TomsNewRoman)
                              {
-                                 Position = new Vector2(922, (TilesY * TileSize) + 18),
-                                 Size = 13
+                                 Position = new Vector2f(922, (TilesY * TileSize) + 18),
+				CharacterSize = 13
                              };
             TextInventory.Add(temp2);
 
             Sprite s1 = new Sprite
                             {
-                                Position = new Vector2(723 + 8, (TilesY * TileSize) + 62),
-                                Scale = new Vector2(0.85f, 0.85f)
+                                Position = new Vector2f(723 + 8, (TilesY * TileSize) + 62),
+                                Scale = new Vector2f(0.85f, 0.85f)
                             };
             Sprite s2 = new Sprite
                             {
-                                Position = new Vector2(821 + 8, (TilesY * TileSize) + 62),
-                                Scale = new Vector2(0.85f, 0.85f)
+                                Position = new Vector2f(821 + 8, (TilesY * TileSize) + 62),
+                                Scale = new Vector2f(0.85f, 0.85f)
                             };
             Sprite s3 = new Sprite
                             {
-                                Position = new Vector2(919 + 8, (TilesY * TileSize) + 62),
-                                Scale = new Vector2(0.85f, 0.85f)
+                                Position = new Vector2f(919 + 8, (TilesY * TileSize) + 62),
+                                Scale = new Vector2f(0.85f, 0.85f)
                             };
 
             SpriteInventory.Add(s1);
             SpriteInventory.Add(s2);
             SpriteInventory.Add(s3);
 
-            HUDBackground = new Sprite(Resources.HUDBackground) { Position = new Vector2(0, TilesY * TileSize) };
-            TitleBar = new Sprite(Resources.TitleBar) {Position = new Vector2(15,670)};
+			HUDBackground = new Sprite(idtexture(Resources.HUDBackground)) { Position = new Vector2f(0, TilesY * TileSize) };
+			TitleBar = new Sprite(idtexture(Resources.TitleBar)) {Position = new Vector2f(15,55)};
         }
 
         private void InitializeRenderCells()
@@ -271,9 +274,9 @@ namespace DRODRoguelike
                     for (int iX = 0; iX < TilesX; iX++)
                     {
                         RenderCell temp = new RenderCell(iX, iY, iZ, TileSize * iX, TileSize * iY);
-                        temp.Sprite = new Sprite(CurrentTileset.Image)
+						temp.Sprite = new Sprite(CurrentTileset.Image)
                                           {
-                                              Position = new Vector2(temp.RenderX, temp.RenderY)
+                                              Position = new Vector2f(temp.RenderX, temp.RenderY)
                                           };
                         RenderCells.Add(temp);
                     }
@@ -307,7 +310,7 @@ namespace DRODRoguelike
 
         public void RunInput()
         {
-            List<KeyCode> kcToCheck = new List<KeyCode>
+			var kcToCheck = new List<Keyboard.Key>
                                           {
                                               _kcExit,
                                               _kcNorth,
@@ -328,10 +331,9 @@ namespace DRODRoguelike
                                               _kcWait
                                           };
 
-            RenderWindow.DispatchEvents();
-            Input i = RenderWindow.Input;
+			RenderWindow.DispatchEvents();
 
-            foreach (KeyCode kc in kcToCheck.Where(i.IsKeyDown))
+			foreach (Keyboard.Key kc in kcToCheck.Where(Keyboard.IsKeyPressed))
             {
                 if (kc == _kcExit)
                 {
@@ -411,22 +413,29 @@ namespace DRODRoguelike
                     Game.SendInput("wait");
                 }
 
-                InputDelay = temp;
-                LastKeyPress = kc;
+				if (!BlockNextInput) {
+					InputDelay = temp;
+				} else {
+					InputDelay = 18;
+					BlockNextInput = false;
+				}
+					LastKeyPress = kc;
             }
 
             if (InputDelay > 0)
                 InputDelay--;
 
-            if (!(i.IsKeyDown(LastKeyPress)))
-                InputDelay = 0;
+			if (!(Keyboard.IsKeyPressed (LastKeyPress))) {
+				InputDelay = 0;
+				BlockNextInput = true;
+			}
         }
 
         public void RunDrawRenderCells()
         {
             foreach (RenderCell r in RenderCells)
             {
-                r.Sprite.SubRect = new IntRect(0, 0, 0, 0);
+				r.Sprite.TextureRect = new IntRect(0, 0, 0, 0);
 
                 int tileX = 4;
                 int tileY = 0;
@@ -442,7 +451,7 @@ namespace DRODRoguelike
 
                     if (SimpleFloor)
                     {
-                        r.Sprite.Image = Resources.GeneralTilesImage;
+						r.Sprite.Texture =Resources.GeneralTilesImage;
                         tileX = 7;
                         tileY = 11;
                     }
@@ -453,22 +462,22 @@ namespace DRODRoguelike
                         {
                             if (Game.EntityManager[r.X, r.Y - 1, r.Z] is IEiWallTiling)
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 1, tileY + 1);
+                                r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 1, tileY + 1);
                             }
                             else
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX, tileY);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX, tileY);
                             }
                         }
                         else
                         {
                             if (Game.EntityManager[r.X, r.Y - 1, r.Z] is IEiWallTiling)
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 2, tileY + 1);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 2, tileY + 1);
                             }
                             else
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 1, tileY);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 1, tileY);
                             }
                         }
                     }
@@ -478,22 +487,22 @@ namespace DRODRoguelike
                         {
                             if (Game.EntityManager[r.X, r.Y - 1, r.Z] is IEiWallTiling)
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 2, tileY + 1);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 2, tileY + 1);
                             }
                             else
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 1, tileY);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 1, tileY);
                             }
                         }
                         else
                         {
                             if (Game.EntityManager[r.X, r.Y - 1, r.Z] is IEiWallTiling)
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX + 1, tileY + 1);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX + 1, tileY + 1);
                             }
                             else
                             {
-                                r.Sprite.SubRect = CurrentTileset.GetSubRect(tileX, tileY);
+								r.Sprite.TextureRect = CurrentTileset.GetSubRect(tileX, tileY);
                             }
                         }
                     }
@@ -503,33 +512,33 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityPlayer)
                 {
                     EntityPlayer player = (EntityPlayer)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture =  Resources.GeneralTilesImage;
 
                     switch (player.Direction)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, 2);
+						r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, 2);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, 2);
+						r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, 2);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 2);
+						r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 2);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, 2);
+						r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, 2);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, 2);
+						r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, 2);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, 2);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, 2);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, 2);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, 2);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, 2);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, 2);
                             break;
                     }
                 }
@@ -538,7 +547,7 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntitySword)
                 {
                     EntitySword sword = (EntitySword)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     int ytile = 3;
 
@@ -548,28 +557,28 @@ namespace DRODRoguelike
                     switch (sword.Direction)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, ytile);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, ytile);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, ytile);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, ytile);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, ytile);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, ytile);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, ytile);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, ytile);
                             break;
                     }
                 }
@@ -578,33 +587,33 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityRoach)
                 {
                     EntityRoach roach = (EntityRoach)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (roach.LastDirection)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, 6);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, 6);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 6);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, 6);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, 6);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, 6);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, 6);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, 6);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, 6);
                             break;
                     }
                 }
@@ -613,7 +622,7 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityRoachQueen)
                 {
                     EntityRoachQueen roachqueen = (EntityRoachQueen)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     int ytile = 8;
 
@@ -625,28 +634,28 @@ namespace DRODRoguelike
                     switch (roachqueen.LastDirection)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, ytile);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, ytile);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, ytile);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, ytile);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, ytile);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, ytile);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, ytile);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, ytile);
                             break;
                     }
                 }
@@ -655,21 +664,21 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityEgg)
                 {
                     EntityEgg roachegg = (EntityEgg)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (roachegg.State)
                     {
                         case 0:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 11);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 11);
                             break;
                         case 1:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 11);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 11);
                             break;
                         case 2:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, 11);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, 11);
                             break;
                         default:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, 11);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, 11);
                             break;
                     }
                 }
@@ -678,7 +687,7 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityEvilEye)
                 {
                     EntityEvilEye evileye = (EntityEvilEye)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
                     int ytile = 4;
 
                     if (evileye.Awake)
@@ -687,28 +696,28 @@ namespace DRODRoguelike
                     switch (evileye.Direction)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(8, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(8, ytile);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(9, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(9, ytile);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(10, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(10, ytile);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(11, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(11, ytile);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(12, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(12, ytile);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(13, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(13, ytile);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(14, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(14, ytile);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(15, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(15, ytile);
                             break;
                     }
                 }
@@ -716,8 +725,8 @@ namespace DRODRoguelike
                 #region "Draw Gel Baby"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityGelBaby)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(12, 1);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(12, 1);
                 }
                 #endregion
                 #region "Draw Wall"
@@ -725,11 +734,11 @@ namespace DRODRoguelike
                 {
                     if (!(Game.EntityManager[r.X, r.Y + 1, r.Z] is IEiWallTiling))
                     {
-                        r.Sprite.SubRect = CurrentTileset.GetSubRect(9, 6);
+                        r.Sprite.TextureRect = CurrentTileset.GetSubRect(9, 6);
                     }
                     else
                     {
-                        r.Sprite.SubRect = CurrentTileset.GetSubRect(8, 6);
+                        r.Sprite.TextureRect = CurrentTileset.GetSubRect(8, 6);
                     }
                 }
                 #endregion
@@ -741,26 +750,26 @@ namespace DRODRoguelike
 
                     if (SimpleBrokenWall)
                     {
-                        r.Sprite.Image = Resources.GeneralTilesImage;
+						r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
                         tileX = 10;
                         tileY = 11;
                     }
 
                     if (!(Game.EntityManager[r.X, r.Y + 1, 2] is IEiWallTiling))
                     {
-                        r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(tileX+1,tileY);
+                        r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(tileX+1,tileY);
                     }
                     else
                     {
-                        r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(tileX, tileY);
+                        r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(tileX, tileY);
                     }
                 }
                 #endregion
                 #region "Draw Orthogonal Square"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityOrthoSquare)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(11, 2);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(11, 2);
                 }
                 #endregion
                 #region "Draw Trapdoor"
@@ -768,34 +777,34 @@ namespace DRODRoguelike
                 {
                     if (SimpleTrapdoor)
                     {
-                        r.Sprite.Image = Resources.GeneralTilesImage;
+						r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
                         tileX = 9;
                         tileY = 11;
                     }
 
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(tileX, tileY);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(tileX, tileY);
                 }
                 #endregion
                 #region "Draw Pit"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityPit)
                 {
-                    r.Sprite.Image = CurrentTileset.Image;
+					r.Sprite.Texture = CurrentTileset.Image;
 
                     if (Game.EntityManager.OutOfBoundaries(r.X, r.Y - 1, r.Z) &&
                         !(Game.EntityManager[r.X, r.Y - 1, r.Z] is EntityPit))
                     {
-                        r.Sprite.SubRect = CurrentTileset.GetSubRect(12, 10);
+                        r.Sprite.TextureRect = CurrentTileset.GetSubRect(12, 10);
                     }
                     else if (Game.EntityManager.OutOfBoundaries(r.X, r.Y - 2, r.Z) &&
                              !(Game.EntityManager[r.X, r.Y - 2, r.Z] is EntityPit) &&
                              Game.EntityManager[r.X, r.Y - 1, r.Z] is EntityPit
                         )
                     {
-                        r.Sprite.SubRect = CurrentTileset.GetSubRect(12, 11);
+                        r.Sprite.TextureRect = CurrentTileset.GetSubRect(12, 11);
                     }
                     else
                     {
-                        r.Sprite.SubRect = CurrentTileset.GetSubRect(12, 12);
+                        r.Sprite.TextureRect = CurrentTileset.GetSubRect(12, 12);
                     }
                 }
                 #endregion
@@ -803,33 +812,33 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityWraithwing)
                 {
                     EntityWraithwing wraithwing = (EntityWraithwing)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (wraithwing.LastDirection)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, 13);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, 13);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 13);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, 13);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, 13);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, 13);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, 13);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, 13);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, 13);
                             break;
                     }
                 }
@@ -837,49 +846,49 @@ namespace DRODRoguelike
                 #region "Draw Shop"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityShop)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(8, 7);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(8, 7);
                 }
                 #endregion
                 #region "Draw Exit"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityExit)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(10, 2);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(10, 2);
                 }
                 #endregion
                 #region "Draw Evil Eye Sentry"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityEvilEyeSentry)
                 {
                     EntityEvilEyeSentry evileyesentry = (EntityEvilEyeSentry)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
                     const int ytile = 6;
 
                     switch (evileyesentry.Direction)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(8, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(8, ytile);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(9, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(9, ytile);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(10, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(10, ytile);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(11, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(11, ytile);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(12, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(12, ytile);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(13, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(13, ytile);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(14, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(14, ytile);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(15, ytile);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(15, ytile);
                             break;
                     }
                 }
@@ -888,33 +897,33 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityZombie)
                 {
                     EntityZombie zombie = (EntityZombie)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (zombie.LastDirection)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(8, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(8, 9);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(9, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(9, 9);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(10, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(10, 9);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(11, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(11, 9);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(12, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(12, 9);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(13, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(13, 9);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(14, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(14, 9);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(15, 9);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(15, 9);
                             break;
                     }
                 }
@@ -923,15 +932,15 @@ namespace DRODRoguelike
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityZombieTrail)
                 {
                     EntityZombieTrail zombietrail = (EntityZombieTrail)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (zombietrail.Life)
                     {
                         case 0:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(9, 8);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(9, 8);
                             break;
                         default:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(8, 8);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(8, 8);
                             break;
                     }
                 }
@@ -939,41 +948,41 @@ namespace DRODRoguelike
                 #region "Draw Brain Yellow"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityBrainYellow)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, 12);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, 12);
                 }
                 #endregion
                 #region "Draw Mimic"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityMimic)
                 {
                     EntityMimic mimic = (EntityMimic)Game.EntityManager[r.X, r.Y, r.Z];
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
 
                     switch (mimic.Direction)
                     {
                         case Helper.Direction.North:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(0, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(0, 15);
                             break;
                         case Helper.Direction.Northeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(1, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(1, 15);
                             break;
                         case Helper.Direction.East:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(2, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(2, 15);
                             break;
                         case Helper.Direction.Southeast:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(3, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(3, 15);
                             break;
                         case Helper.Direction.South:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(4, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(4, 15);
                             break;
                         case Helper.Direction.Southwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(5, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(5, 15);
                             break;
                         case Helper.Direction.West:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(6, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(6, 15);
                             break;
                         case Helper.Direction.Northwest:
-                            r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(7, 15);
+                            r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(7, 15);
                             break;
                     }
                 }
@@ -981,20 +990,20 @@ namespace DRODRoguelike
                 #region "Draw Doors and Orbs"
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityClosedDoor)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(15, 16);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(15, 16);
                 }
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityOpenDoor)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(9, 2);
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(9, 2);
                 }
                 else if (Game.EntityManager[r.X, r.Y, r.Z] is EntityPressurePlate)
                 {
-                    r.Sprite.Image = Resources.GeneralTilesImage;
+					r.Sprite.Texture = idtexture(Resources.GeneralTilesImage);
                     EntityPressurePlate epp = (EntityPressurePlate)Game.EntityManager[r.X, r.Y, r.Z];
 
-                    r.Sprite.SubRect = Resources.GeneralTiles.GetSubRect(epp.Pressed ? 10 : 9, 3);
+                    r.Sprite.TextureRect = Resources.GeneralTiles.GetSubRect(epp.Pressed ? 10 : 9, 3);
                 }
                 #endregion
                 RenderWindow.Draw(r.Sprite);
@@ -1008,7 +1017,7 @@ namespace DRODRoguelike
             {
                 Particles[n].RenderX += Particles[n].Speed * (float)Math.Cos(Helper.ARadians(Particles[n].Angle));
                 Particles[n].RenderY += Particles[n].Speed * (float)Math.Sin(Helper.ARadians(Particles[n].Angle));
-                Particles[n].Sprite.Position = new Vector2(Particles[n].RenderX, Particles[n].RenderY);
+                Particles[n].Sprite.Position = new Vector2f(Particles[n].RenderX, Particles[n].RenderY);
                 RenderWindow.Draw(Particles[n].Sprite);
 
                 Particles[n].Life--;
@@ -1025,7 +1034,7 @@ namespace DRODRoguelike
             RenderWindow.Draw(HUDBackground);
 
             TextInfoLevel.DisplayedString = "Room: " + TerrainManager.TerrainNumber;
-            TextInfoTurn.DisplayedString = "Turn: " + count;
+			TextInfoTurn.DisplayedString = "Turn: " + Game.Turn;
             TextInfoEnemies.DisplayedString = "Enemies: " + Game.EnemyCount;
             TextInfoGreckles.DisplayedString = "Greckles: " + Game.Greckles;
             TextInfoScore.DisplayedString = "Score: " + Game.Score;
@@ -1053,7 +1062,7 @@ namespace DRODRoguelike
 
             foreach (Sprite s in SpriteInventory)
             {
-                s.Image = Game.Player.Inventory.Items[SpriteInventory.IndexOf(s)].Image;
+				s.Texture = Game.Player.Inventory.Items [SpriteInventory.IndexOf (s)].Image;
                 RenderWindow.Draw(s);
             }
 
@@ -1066,11 +1075,11 @@ namespace DRODRoguelike
             RenderWindow.Draw(TitleBar);
         }
 
-        public void SpawnParticles(int x, int y, Image image, int count)
+        public void SpawnParticles(int x, int y, Texture image, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                Particle p = new Particle(x - 10 + Helper.Random.Next(0, 10), y - 10 + Helper.Random.Next(0, 10)) { Sprite = { Image = image } };
+				Particle p = new Particle(x - 10 + Helper.Random.Next(0, 10), y - 10 + Helper.Random.Next(0, 10)) { Sprite = { Texture = image } };
                 Particles.Add(p);
             }
         }

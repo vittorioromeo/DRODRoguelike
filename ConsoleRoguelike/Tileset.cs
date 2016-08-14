@@ -7,20 +7,20 @@ namespace DRODRoguelike
 {
     public class Tileset
     {
-        public Tileset(Image image, int tileSize)
+        public Tileset(Texture image, int tileSize)
         {
             Image = image;
             TileSize = tileSize;
         }
 
-        public Image Image { get; set; }
+		public Texture Image { get; set; }
         public int TileSize { get; set; }
 
         public Sprite GetSprite(int x, int y)
         {
-            Sprite result = new Sprite(Image)
+			Sprite result = new Sprite(Image)
                                 {
-                                    SubRect = new IntRect(x * TileSize, y * TileSize, TileSize, TileSize)
+                                    TextureRect = new IntRect(x * TileSize, y * TileSize, TileSize, TileSize)
                                 };
 
             return result;

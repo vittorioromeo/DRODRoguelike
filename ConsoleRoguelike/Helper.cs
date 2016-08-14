@@ -194,117 +194,117 @@ namespace DRODRoguelike
             return new EntityNull(game);
         }
 
-        public static KeyCode StringToKeyCode(string s)
+        public static Keyboard.Key StringToKey(string s)
         {
             switch (s)
             {
                 case "ESCAPE":
-                    return KeyCode.Escape;
+					return Keyboard.Key.Escape;
                 case "A":
-                    return KeyCode.A;
+					return Keyboard.Key.A;
                 case "B":
-                    return KeyCode.B;
+                    return Keyboard.Key.B;
                 case "C":
-                    return KeyCode.C;
+                    return Keyboard.Key.C;
                 case "D":
-                    return KeyCode.D;
+                    return Keyboard.Key.D;
                 case "E":
-                    return KeyCode.E;
+                    return Keyboard.Key.E;
                 case "F":
-                    return KeyCode.F;
+                    return Keyboard.Key.F;
                 case "G":
-                    return KeyCode.G;
+                    return Keyboard.Key.G;
                 case "H":
-                    return KeyCode.H;
+                    return Keyboard.Key.H;
                 case "I":
-                    return KeyCode.I;
+                    return Keyboard.Key.I;
                 case "L":
-                    return KeyCode.L;
+                    return Keyboard.Key.L;
                 case "M":
-                    return KeyCode.M;
+                    return Keyboard.Key.M;
                 case "N":
-                    return KeyCode.N;
+                    return Keyboard.Key.N;
                 case "O":
-                    return KeyCode.O;
+                    return Keyboard.Key.O;
                 case "P":
-                    return KeyCode.P;
+                    return Keyboard.Key.P;
                 case "Q":
-                    return KeyCode.Q;
+                    return Keyboard.Key.Q;
                 case "R":
-                    return KeyCode.R;
+                    return Keyboard.Key.R;
                 case "S":
-                    return KeyCode.S;
+                    return Keyboard.Key.S;
                 case "T":
-                    return KeyCode.T;
+                    return Keyboard.Key.T;
                 case "U":
-                    return KeyCode.U;
+                    return Keyboard.Key.U;
                 case "V":
-                    return KeyCode.V;
+                    return Keyboard.Key.V;
                 case "Z":
-                    return KeyCode.Z;
+                    return Keyboard.Key.Z;
                 case "W":
-                    return KeyCode.W;
+                    return Keyboard.Key.W;
                 case "K":
-                    return KeyCode.K;
+                    return Keyboard.Key.K;
                 case "J":
-                    return KeyCode.J;
+                    return Keyboard.Key.J;
                 case "Y":
-                    return KeyCode.Y;
+                    return Keyboard.Key.Y;
                 case "UP":
-                    return KeyCode.Up;
+                    return Keyboard.Key.Up;
                 case "DOWN":
-                    return KeyCode.Down;
+                    return Keyboard.Key.Down;
                 case "LEFT":
-                    return KeyCode.Left;
+                    return Keyboard.Key.Left;
                 case "RIGHT":
-                    return KeyCode.Right;
+                    return Keyboard.Key.Right;
                 case "LSHIFT":
-                    return KeyCode.LShift;
+                    return Keyboard.Key.LShift;
                 case "RSHIFT":
-                    return KeyCode.RShift;
+                    return Keyboard.Key.RShift;
                 case "ADD":
-                    return KeyCode.Add;
+                    return Keyboard.Key.Add;
                 case "PAGEUP":
-                    return KeyCode.PageUp;
+                    return Keyboard.Key.PageUp;
                 case "PAGEDOWN":
-                    return KeyCode.PageDown;
+                    return Keyboard.Key.PageDown;
                 case "NUMPAD0":
-                    return KeyCode.Numpad0;
+                    return Keyboard.Key.Numpad0;
                 case "NUMPAD1":
-                    return KeyCode.Numpad1;
+                    return Keyboard.Key.Numpad1;
                 case "NUMPAD2":
-                    return KeyCode.Numpad2;
+                    return Keyboard.Key.Numpad2;
                 case "NUMPAD3":
-                    return KeyCode.Numpad3;
+                    return Keyboard.Key.Numpad3;
                 case "NUMPAD4":
-                    return KeyCode.Numpad4;
+                    return Keyboard.Key.Numpad4;
                 case "NUMPAD5":
-                    return KeyCode.Numpad5;
+                    return Keyboard.Key.Numpad5;
                 case "NUMPAD6":
-                    return KeyCode.Numpad6;
+                    return Keyboard.Key.Numpad6;
                 case "NUMPAD7":
-                    return KeyCode.Numpad7;
+                    return Keyboard.Key.Numpad7;
                 case "NUMPAD8":
-                    return KeyCode.Numpad8;
+                    return Keyboard.Key.Numpad8;
                 case "NUMPAD9":
-                    return KeyCode.Numpad9;
+                    return Keyboard.Key.Numpad9;
                 case "SPACE":
-                    return KeyCode.Space;
+                    return Keyboard.Key.Space;
                 case "COMMA":
-                    return KeyCode.Comma;
+                    return Keyboard.Key.Comma;
                 case "TILDE":
-                    return KeyCode.Tilde;
+                    return Keyboard.Key.Tilde;
                 case "DASH":
-                    return KeyCode.Dash;
+                    return Keyboard.Key.Dash;
                 case "PERIOD":
-                    return KeyCode.Period;
+                    return Keyboard.Key.Period;
                 case "LCONTROL":
-                    return KeyCode.LControl;
+                    return Keyboard.Key.LControl;
                 case "RCONTROL":
-                    return KeyCode.LControl;
+                    return Keyboard.Key.LControl;
             }
 
-            return KeyCode.X;
+            return Keyboard.Key.X;
         }
     }
 }

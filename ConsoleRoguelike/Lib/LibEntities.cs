@@ -179,9 +179,10 @@ namespace DRODRoguelike.Lib
                 if (!(Game.EntityManager[Parent.X + dir[0], Parent.Y + dir[1], Parent.Z] is IEiIgnoreEnemyCount))
                     Game.EnemyCount--;
 
-                Log.AddEntry(Parent.Name + " killed a(n) " +
-                             Game.EntityManager[Parent.X + dir[0], Parent.Y + dir[1], Parent.Z].Name +
-                             ". [ " + (Parent.X + dir[0]) + " ; " + (Parent.Y + dir[1]) + " ]");
+
+                //Log.AddEntry(Parent.Name + " killed a(n) " +
+                  //           Game.EntityManager[Parent.X + dir[0], Parent.Y + dir[1], Parent.Z].Name +
+                    //         ". [ " + (Parent.X + dir[0]) + " ; " + (Parent.Y + dir[1]) + " ]");
                 Game.EntityManager[Parent.X + dir[0], Parent.Y + dir[1], Parent.Z].Destroy ();
 
                 if (Resources.Sounds)
