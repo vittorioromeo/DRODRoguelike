@@ -28,6 +28,9 @@ local.properties
 # PDT-specific
 .buildpath
 
+packages/
+SFML.Net-2.2/
+*.userprefs
 
 #################
 ## Visual Studio
