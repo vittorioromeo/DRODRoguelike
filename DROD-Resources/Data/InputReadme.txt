@@ -1,0 +1,59 @@
+(example:
+			[Input]
+			kcExit=A
+)
+
+Available input commands:
+
+ A
+ B
+ C
+ D
+ E
+ F
+ G
+ H
+ I
+ L
+ M
+ N
+ O
+ P
+ Q
+ R
+ S
+ T
+ U
+ V
+ Z
+ W
+ K
+ J
+ Y
+ UP
+ DOWN
+ LEFT
+ RIGHT
+ LSHIFT
+ RSHIFT
+ ADD
+ PAGEUP
+ PAGEDOWN
+ NUMPAD0
+ NUMPAD1
+ NUMPAD2
+ NUMPAD3
+ NUMPAD4
+ NUMPAD5
+ NUMPAD6
+ NUMPAD7
+ NUMPAD8
+ NUMPAD9
+ SPACE
+ COMMA
+ TILDE
+ DASH
+ PERIOD
+ LCONTROL
+ RCONTROL
+ ESCAPE
