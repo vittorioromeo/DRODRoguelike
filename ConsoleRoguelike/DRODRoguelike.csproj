@@ -31,6 +31,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,23 +61,25 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="sfmlnet-window-2">
-      <HintPath>..\SFML.Net-2.2\lib\x64\sfmlnet-window-2.dll</HintPath>
-    </Reference>
-    <Reference Include="sfmlnet-system-2">
-      <HintPath>..\SFML.Net-2.2\lib\x64\sfmlnet-system-2.dll</HintPath>
-    </Reference>
-    <Reference Include="sfmlnet-graphics-2">
-      <HintPath>..\SFML.Net-2.2\lib\x64\sfmlnet-graphics-2.dll</HintPath>
-    </Reference>
-    <Reference Include="sfmlnet-audio-2">
-      <HintPath>..\SFML.Net-2.2\lib\x64\sfmlnet-audio-2.dll</HintPath>
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl">
-      <HintPath>..\SFML.Net-2.2\lib\x64\OpenTK.GLControl.dll</HintPath>
+      <HintPath>..\packages\OpenTK.GLControl.1.1.2349.61993\lib\NET40\OpenTK.GLControl.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\SFML.Net-2.2\lib\x64\OpenTK.dll</HintPath>
+    <Reference Include="sfmlnet-system-2">
+      <HintPath>..\packages\Graphnode.SFML.Net.2.3.1\lib\sfmlnet-system-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-window-2">
+      <HintPath>..\packages\Graphnode.SFML.Net.2.3.1\lib\sfmlnet-window-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-graphics-2">
+      <HintPath>..\packages\Graphnode.SFML.Net.2.3.1\lib\sfmlnet-graphics-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-audio-2">
+      <HintPath>..\packages\Graphnode.SFML.Net.2.3.1\lib\sfmlnet-audio-2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +139,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="OpenTK.dll.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -144,4 +151,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.1.0.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
+  <Import Project="..\packages\Graphnode.SFML.Net.2.3.1\build\Graphnode.SFML.Net.targets" Condition="Exists('..\packages\Graphnode.SFML.Net.2.3.1\build\Graphnode.SFML.Net.targets')" />
 </Project>

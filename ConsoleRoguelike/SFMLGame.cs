@@ -77,8 +77,8 @@ namespace DRODRoguelike
         public SFMLGame()
         {
             RenderWindow = Helper.INIParser.GetSetting("Rendering", "Windowed") == "1"
-                               ? new RenderWindow(new VideoMode(1022, 900), "DROD Roguelike", Styles.Default)
-                               : new RenderWindow(new VideoMode(1022, 900), "DROD Roguelike", Styles.Fullscreen);
+                               ? new RenderWindow(new VideoMode(1440, 900), "DROD Roguelike", Styles.Default)
+                               : new RenderWindow(new VideoMode(1440, 900), "DROD Roguelike", Styles.Fullscreen);
 
 			RenderWindow.SetVerticalSyncEnabled(true);
 			RenderWindow.Size = new Vector2u(Convert.ToUInt32(Helper.INIParser.GetSetting("Rendering", "Width")),
